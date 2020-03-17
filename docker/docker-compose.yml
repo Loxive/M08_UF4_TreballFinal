@@ -1,0 +1,26 @@
+version: '3'
+services:
+    ldap:
+        image: dwimberger/ldap-ad-it
+        build: ./ldap
+        ports: 
+            - 389:10389
+    zend:
+        image: php-zendserver
+        ports:
+            - 80:80
+            - 10088:10081
+        environment:
+            - MYSQL_HOSTNAME=localhost
+            - MYSQL_PORT=3306
+            - MYSQL_USERNAME=jose
+            - MYSQL_PASSWORD=passwd
+            - MYSQL_DBNAME=zend
+    git:
+        image: gitlab/gitlab-ce:latest
+        ports:
+            - 8080:80
+        volumes:
+            - /var/lib/docker/mitjana/gitlab/config:/etc/gitlab
+            - /var/lib/docker/mitjana/gitlab/logs:/var/log/gitlab
+            - /var/lib/docker/mitjana/gitlab/data:/var/opt/gitlab
