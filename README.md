@@ -124,33 +124,4 @@ Els minims necesaris per poder fer anar aquesta aplicació son molt alts, he hag
 Per aquest servidor, docker es imprescindible, ja que la majoria de les aplicacions instal·lades son contenidors.
 Per aixecar totes les aplicacions docker, cal copiar el ```docker-compose.yml```, i els dockerfiles de l'OPENLDAP i Laminas Framework.
 
-```yml
-version: '3'
-services:
-    ldap:
-        image: dwimberger/ldap-ad-it
-        build: ./ldap
-        ports: 
-            - '389:10389'
-    zend:
-        image: php-zendserver
-        ports:
-            - '80:80'
-            - '10088:10081'
-        environment:
-            - MYSQL_HOSTNAME=localhost
-            - MYSQL_PORT=3306
-            - MYSQL_USERNAME=jose
-            - MYSQL_PASSWORD=passwd
-            - MYSQL_DBNAME=zend
-    git:
-        image: gitlab/gitlab-ce:latest
-        ports:
-            - '8080:80'
-        volumes:
-            - /var/lib/docker/mitjana/gitlab/config:/etc/gitlab
-            - /var/lib/docker/mitjana/gitlab/logs:/var/log/gitlab
-            - /var/lib/docker/mitjana/gitlab/data:/var/opt/gitlab
-```
-
-<br>
+Hi han dos docker-compose ja que vaig fer un amb un projecte de php amb laminas, llavors l'unic que hauries de fer un cop vols fer el servidor es executar el docker amb laminas o sense i pujar-ho al git.

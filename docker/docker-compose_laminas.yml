@@ -1,0 +1,47 @@
+version: '3'
+services:
+    ldap:
+        image: dwimberger/ldap-ad-it
+        restart: always
+        build: ./ldap
+        ports: 
+            - 389:10389
+    composer-laminas:
+        image: composer
+        volumes: 
+            - /var/lib/docker/mitjana/php:/app
+        dns:
+            - 8.8.8.8
+            - 8.8.4.4
+            - 0.0.0.0
+        command: "composer create-project -sdev laminas/laminas-mvc-skeleton mitjana-application"
+    laminas:
+        image: php:7.2-apache
+        restart: always
+        build: ./laminas
+        ports:
+            - 80:80
+        volumes:
+            - /var/lib/docker/mitjana/php/mitjana-application:/var/www
+    zend:
+        image: php-zendserver
+        ports:
+            - 80:80
+            - 10088:10081
+        environment:
+            - MYSQL_HOSTNAME=localhost
+            - MYSQL_PORT=3306
+            - MYSQL_USERNAME=jose
+            - MYSQL_PASSWORD=passwd
+            - MYSQL_DBNAME=zend
+        volumes: 
+            - /var/lib/docker/mitjana/php/mitjana-application:/var/www/html
+    git:
+        image: gitlab/gitlab-ce:latest
+        restart: always
+        ports:
+            - 8080:80
+        volumes:
+            - /var/lib/docker/mitjana/gitlab/config:/etc/gitlab
+            - /var/lib/docker/mitjana/gitlab/logs:/var/log/gitlab
+            - /var/lib/docker/mitjana/gitlab/data:/var/opt/gitlab
